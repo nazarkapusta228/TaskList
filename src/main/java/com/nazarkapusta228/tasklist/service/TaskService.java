@@ -21,14 +21,16 @@ public class TaskService implements TaskRepository {
 
 
     @Override
-    public void removeTask(int id) {
+    public boolean removeTask(int id) {
         Task task = findTaskByID(id);
         if (task != null) {
             tasksList.remove(task);
             System.out.println("Task removed successfully");
+            return true;
         }
         else {
             System.out.println("Task was not removed");
+            return false;
         }
     }
 
@@ -36,17 +38,20 @@ public class TaskService implements TaskRepository {
     @Override
     public void updateTask(Task task) {
          Task existingTask = findTaskByID(task.getId());
-         if (existingTask!=null & checkTask(task)){
+         if (existingTask!=null && checkTask(task)){
             existingTask.setDeadline(task.getDeadline());
             existingTask.setDescription(task.getDescription());
             existingTask.setTitle(task.getTitle());
             existingTask.setIsDone(task.isDone());
          }
-         else {
+         else if(existingTask == null) {
              System.out.println("Task not found");
          }
-
+         else {
+             System.out.println("Invalid task data, update failed");
+         }
     }
+
     @Override
     public boolean getTaskStatus(int id){
         Task task = findTaskByID(id);

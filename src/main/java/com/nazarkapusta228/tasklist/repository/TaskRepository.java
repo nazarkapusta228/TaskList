@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskRepository {
     public void addTask(Task task);
-    public void removeTask(int id);
+    public boolean removeTask(int id);
     public void updateTask(Task task);
     public boolean getTaskStatus(int id);
     public List<Task> findTasksByTitle(String titlePart);
