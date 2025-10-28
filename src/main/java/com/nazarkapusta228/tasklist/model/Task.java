@@ -50,7 +50,7 @@ public class Task {
     }
 
 
-    public boolean IsDone(){
+    public boolean isDone(){
         return isDone;
     }
 

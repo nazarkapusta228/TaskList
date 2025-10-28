@@ -36,11 +36,11 @@ public class TaskService implements TaskRepository {
     @Override
     public void updateTask(Task task) {
          Task existingTask = findTaskByID(task.getId());
-         if (existingTask!=null){
+         if (existingTask!=null & checkTask(task)){
             existingTask.setDeadline(task.getDeadline());
             existingTask.setDescription(task.getDescription());
             existingTask.setTitle(task.getTitle());
-            existingTask.setIsDone(task.IsDone());
+            existingTask.setIsDone(task.isDone());
          }
          else {
              System.out.println("Task not found");
@@ -48,8 +48,12 @@ public class TaskService implements TaskRepository {
 
     }
     @Override
-    public boolean isDone(int id){
-        return true;
+    public boolean getTaskStatus(int id){
+        Task task = findTaskByID(id);
+        if(task != null){
+            return task.isDone();
+        }
+        return false;
     }
 
     @Override
@@ -64,8 +68,15 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findTasksByDoneStatus(boolean done){
-        return null;
+    public List<Task> findTasksByDoneStatus(boolean done) {
+        List<Task> tasksFoundByDoneStatus = new ArrayList<>();
+        for (Task task : tasksList) {
+            if (task.isDone() == done) {
+                tasksFoundByDoneStatus.add(task);
+            }
+
+        }
+        return tasksFoundByDoneStatus;
     }
 
 
