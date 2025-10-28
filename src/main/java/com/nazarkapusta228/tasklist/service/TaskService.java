@@ -21,9 +21,17 @@ public class TaskService implements TaskRepository {
 
 
     @Override
-    public void removeTask(int id){
-
+    public void removeTask(int id) {
+        Task task = findTaskByID(id);
+        if (task != null) {
+            tasksList.remove(task);
+            System.out.println("Task removed successfully");
+        }
+        else {
+            System.out.println("Task was not removed");
+        }
     }
+
 
     @Override
     public void updateTask(Task task){
@@ -81,6 +89,16 @@ public class TaskService implements TaskRepository {
 
         }
         return false;
+    }
+
+    //helper methods for removeTask(Task task)
+    private Task findTaskByID(int id){
+        for(Task t : tasksList){
+            if(t.getId() == id){
+                return t;
+            }
+        }
+         return null;
     }
 
 }
