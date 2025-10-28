@@ -54,7 +54,13 @@ public class TaskService implements TaskRepository {
 
     @Override
     public List<Task> findTasksByTitle(String titlePart){
-        return null;
+        List<Task> tasksFoundByTitlePart = new ArrayList<>();
+        for(Task task : tasksList) {
+            if(task.getTitle().toLowerCase().contains(titlePart.toLowerCase())){
+                tasksFoundByTitlePart.add(task);
+            }
+        }
+        return tasksFoundByTitlePart;
     }
 
     @Override
