@@ -10,12 +10,17 @@ import java.util.List;
 public class TaskService implements TaskRepository {
     private List<Task> tasksList = new ArrayList<>();
 
+    private int nextId = 0;
 
     @Override
     public void addTask(Task task){
-        if (checkTask(task) & !checkIfTaskWasAdded(task)) {
+        if (!checkIfTaskWasAdded(task) && checkTask(task)) {
+            task.setId(nextId++);
             tasksList.add(task);
             System.out.println("Task was successfully added");
+        }
+        else {
+            System.out.println("Task was not added");
         }
     }
 
@@ -37,20 +42,29 @@ public class TaskService implements TaskRepository {
 
     @Override
     public void updateTask(Task task) {
-         Task existingTask = findTaskByID(task.getId());
-         if (existingTask!=null && checkTask(task)){
-            existingTask.setDeadline(task.getDeadline());
-            existingTask.setDescription(task.getDescription());
-            existingTask.setTitle(task.getTitle());
-            existingTask.setIsDone(task.isDone());
-         }
-         else if(existingTask == null) {
-             System.out.println("Task not found");
-         }
-         else {
-             System.out.println("Invalid task data, update failed");
-         }
+        Task existingTask = findTaskByID(task.getId());
+
+        if (existingTask == null) {
+            System.out.println("Task not found");
+            return;
+        }
+
+        Task temp = new Task(task.getTitle(), task.getDescription(), task.getDeadline(), task.isDone());
+        temp.setId(task.getId());
+
+        if (!checkTask(temp)) {
+            System.out.println("Invalid task data, update failed");
+            return;
+        }
+
+        existingTask.setTitle(temp.getTitle());
+        existingTask.setDescription(temp.getDescription());
+        existingTask.setDeadline(temp.getDeadline());
+        existingTask.setIsDone(temp.isDone());
+
+        System.out.println("Task updated successfully");
     }
+
 
     @Override
     public boolean getTaskStatus(int id){
@@ -85,7 +99,10 @@ public class TaskService implements TaskRepository {
     }
 
 
-
+//    public void clearTasks() {
+//        tasksList.clear();
+//        nextId = 0;
+//    }
 
 
     // methods for checking if the task that is being added has all its required fields filled
@@ -100,15 +117,13 @@ public class TaskService implements TaskRepository {
     }
 
     private boolean checkDeadline(Task task){
-        if(!task.getDeadline().isBefore(LocalDate.now())){
-            return false;
-        }
-        return true;
+        return !task.getDeadline().isBefore(LocalDate.now());
     }
 
 
 
-    //at the moment unused
+
+
     private boolean checkIfTaskWasAdded(Task task){
         for(Task t : tasksList){
             if(t.getTitle().equals(task.getTitle())
@@ -122,16 +137,19 @@ public class TaskService implements TaskRepository {
         return false;
     }
 
+    public boolean callcheckIfTaskWasAdded(Task task){
+        return checkIfTaskWasAdded(task);
+    }
 
 
 
-    private Task findTaskByID(int id){
-        for(Task t : tasksList){
+    public Task findTaskByID(int id){
+        for(Task t : tasksList) {
             if(t.getId() == id){
                 return t;
             }
         }
-         return null;
+        return null;
     }
 
 }

@@ -8,10 +8,8 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
-@Entity
+//@Entity
 public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String description;
@@ -20,7 +18,8 @@ public class Task {
 
     public Task() {}
 
-    public Task(String title, String description, LocalDate deadline, boolean done){
+    public Task( String title, String description, LocalDate deadline, boolean done){
+
         this.title = title;
         this.description = description;
         this.deadline = deadline;
@@ -33,6 +32,9 @@ public class Task {
         return id;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
     public String getTitle(){
         return title;
     }
